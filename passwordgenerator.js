@@ -37,9 +37,13 @@ class Password {
                 i = i - 1;
             } else {
                 var newSymbol = group[Math.floor(Math.random() * group.length)];
-                password += newSymbol;
-                previous2 = previous1;
-                previous1 = newSymbol;
+                if (newSymbol == previous1) { 
+                    i = i - 1;
+                } else {
+                    password += newSymbol;
+                    previous2 = previous1;
+                    previous1 = newSymbol;
+                }
             }
             console.log("Adding digits: " + newSymbol);
         }

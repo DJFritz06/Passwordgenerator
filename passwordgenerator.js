@@ -1,8 +1,8 @@
 var passwords = 0; 
 var password = "";
-var previous2;
-var previous1; 
-var numberCount = 0;
+var previous2; // sollte Teil von PasswordGenerator sein, muss nicht global sein; generell sollte man globale Variablen möglichst vermeiden
+var previous1; // s.o.
+var numberCount = 0; // s.o.
 
 document.addEventListener("keydown", event => {
     if (event.keyCode == 32 || event.keyCode == 13) {
@@ -11,14 +11,14 @@ document.addEventListener("keydown", event => {
     }
 })
 
-class Password {
+class PasswordGenerator {
     create(length) {
         console.log("Step 2...");
-        var symboles = {
-            vocals: [
+        var symbols = {
+            vowels: [
                 "a", "e", "i", "o", "u"
             ],
-            konsonants: [
+            consonants: [
                 "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "x", "y", "z"
             ],
             numbers: [
@@ -30,10 +30,10 @@ class Password {
             var group;
             var groupChoice = Math.random();
             console.log("GroupChoice: " + groupChoice);
-            if (groupChoice <= 0.33) {group = symboles.vocals;}
-            if (groupChoice >= 0.33 && groupChoice <= 0.66) {group = symboles.konsonants;}
-            if (groupChoice >= 0.66) {group = symboles.numbers; numberCount++;}
-            if (i > 2 && group.includes(previous1) && group.includes(previous2) || numberCount > Math.floor(length / 8) && group == symboles.numbers) {
+            if (groupChoice <= 0.33) {group = symbols.vowels;}
+            if (groupChoice > 0.33 && groupChoice < 0.66) {group = symbols.consonants;}
+            if (groupChoice >= 0.66) {group = symbols.numbers; numberCount++;}
+            if (i > 2 && group.includes(previous1) && group.includes(previous2) || numberCount > Math.floor(length / 8) && group == symbols.numbers) {
                 i = i - 1;
             } else {
                 var newSymbol = group[Math.floor(Math.random() * group.length)];
@@ -58,7 +58,10 @@ function createPassword() {
     console.log("Step 1...");
     var digitsLength = prompt("How many digits?", "6 - 32");
     if (digitsLength < 6) {digitsLength = prompt("Please stick to the minimum amount of digits allowed.", "6 - 32");}
-    var newPassword = new Password().create(digitsLength);
+    // Hier weitere Grenzfälle behandeln: 
+    // - eingegebener Wert keine Zahl
+    // - Zahl > 32 (sehr große Zahlen lassen Browser einfrieren)
+    var newPassword = new PasswordGenerator().create(digitsLength);
     console.log("Password " + passwords + ": " + newPassword);
     alert("New password: " + newPassword);
 }
